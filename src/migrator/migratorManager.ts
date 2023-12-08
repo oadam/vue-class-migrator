@@ -94,6 +94,10 @@ export default class MigrationManager {
     }
     if (propNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
       propObject = addPropertyObject(propsObject, propName, propNode.getText());
+      // is tsType is not null, assume that it is more correct than the vue type
+      if (tsType) {
+	      propObject.getProperty('type')?.remove();
+      }
       if (!propObject.getProperty('type')) {
         propObject
           .addPropertyAssignment({

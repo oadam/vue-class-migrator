@@ -105,18 +105,12 @@ export default (clazz: ClassDeclaration, mainObject: ObjectLiteralExpression) =>
   if (classPropertyData.length || clazzDataMethod) {
     const { dataMethod, returnObject } = getDataMethod(clazz, mainObject);
     classPropertyData.forEach((propertyData) => {
+      if (propertyData.getName() == '$refs') {return;}
       const typeNode = propertyData.getTypeNode()?.getText();
       if (typeNode) {
-        dataMethod.insertVariableStatement(0, {
-          declarationKind: VariableDeclarationKind.Const,
-          declarations: [{
+        returnObject.addPropertyAssignment({
             name: propertyData.getName(),
-            type: typeNode,
-            initializer: propertyData.getInitializer()?.getText() ?? 'undefined',
-          }],
-        });
-        returnObject.addShorthandPropertyAssignment({
-          name: propertyData.getName(),
+            initializer: (propertyData.getInitializer()?.getText() ?? 'undefined') + " as " + typeNode,
         });
       } else {
         returnObject.addPropertyAssignment({
