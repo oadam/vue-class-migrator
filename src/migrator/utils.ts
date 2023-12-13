@@ -7,12 +7,24 @@ import type {
 } from 'ts-morph';
 import { SyntaxKind } from 'ts-morph';
 
-export const addPropertyObject = (mainObject: ObjectLiteralExpression, propName: string, initializer = '{}'): ObjectLiteralExpression => mainObject
-  .addPropertyAssignment({
-    name: propName,
-    initializer,
-  })
-  .getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+export const addPropertyObject = (mainObject: ObjectLiteralExpression, propName: string, initializer = '{}'): ObjectLiteralExpression => {
+	if (propName === 'props') {
+		// put props as first property
+		return mainObject
+		.insertPropertyAssignment(0, {
+			name: propName,
+			initializer,
+		})
+		.getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+	} else {
+		return mainObject
+		.addPropertyAssignment({
+			name: propName,
+			initializer,
+		})
+		.getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+	}
+};
 
 export const addPropertyArray = (mainObject: ObjectLiteralExpression, propName: string, initializer = '[]'): ArrayLiteralExpression => mainObject
   .addPropertyAssignment({
