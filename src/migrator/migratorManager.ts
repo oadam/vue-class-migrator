@@ -199,7 +199,7 @@ export default class MigrationManager {
       boolean: 'Boolean',
       number: 'Number',
     };
-    let fallbackType = 'Object';
+    let fallbackType = 'null as unknown';
     fallbackType = isArray ? 'Array' : fallbackType;
     fallbackType = isFunction ? 'Function' : fallbackType;
 
